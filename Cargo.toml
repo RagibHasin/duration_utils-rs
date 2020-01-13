@@ -1,0 +1,12 @@
+[package]
+name = "duration_utils"
+version = "0.1.0"
+authors = ["Muhammad Ragib Hasin <ragib.hasin@gmail.com>"]
+edition = "2018"
+description = 'Some useful utility functions for std::time::Duration'
+license = 'MIT OR Apache-2.0'
+readme = 'README.md'
+
+[dependencies]
+serde = '1.0'
+regex = '1.3'
