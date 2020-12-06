@@ -10,3 +10,7 @@ pub use direct_serde::*;
 
 /// serde for `Option<Duration>`
 pub mod opt;
+
+#[cfg(feature = "serde_with")]
+/// `serde_as` notation from `serde_with` crate
+pub mod serde_as;

@@ -26,3 +26,29 @@ where
     Option::<DurationWrapper>::deserialize(deserializer)
         .map(|opt_duration| opt_duration.map(|DurationWrapper(duration)| duration))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[derive(Serialize, Deserialize)]
+    struct Tester(#[serde(with = "super")] Option<Duration>);
+
+    #[test]
+    fn ser_opt_dur() {
+        let dur = serde_json::to_string(&Tester(Some(Duration::from_secs(1)))).unwrap();
+        assert_eq!(dur, "\"PT1S\"".to_string());
+
+        let dur = serde_json::to_string(&Tester(None)).unwrap();
+        assert_eq!(dur, "null".to_string());
+    }
+
+    #[test]
+    fn de_opt_dur() {
+        let Tester(opt_dur) = serde_json::from_str("\"PT1S\"").unwrap();
+        assert_eq!(opt_dur, Some(Duration::from_secs(1)));
+
+        let Tester(opt_dur) = serde_json::from_str("null").unwrap();
+        assert_eq!(opt_dur, None);
+    }
+}

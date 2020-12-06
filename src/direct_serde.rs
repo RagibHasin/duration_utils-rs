@@ -18,8 +18,6 @@ where
 {
     let value = String::deserialize(deserializer)?;
 
-    from_iso8601(&value).ok_or(D::Error::invalid_value(
-        Unexpected::Str(&value),
-        &"PdDThHmMsS",
-    ))
+    from_iso8601(&value)
+        .ok_or_else(|| D::Error::invalid_value(Unexpected::Str(&value), &"PdDThHmMsS"))
 }
