@@ -9,7 +9,7 @@ const VALID_SECS: Range<u32> = 0..60;
 ///
 /// Returns `None` if minutes or seconds is invalid.
 #[inline]
-pub fn from_hms_opt(h: u32, m: u32, s: u32) -> Option<Duration> {
+pub fn try_from_hms(h: u32, m: u32, s: u32) -> Option<Duration> {
     if VALID_SECS.contains(&s) && VALID_SECS.contains(&m) {
         Some(Duration::from_secs((h * 3600 + m * 60 + s) as u64))
     } else {
@@ -35,7 +35,7 @@ pub fn from_hms_opt(h: u32, m: u32, s: u32) -> Option<Duration> {
 /// ```
 #[inline]
 pub fn from_hms(h: u32, m: u32, s: u32) -> Duration {
-    from_hms_opt(h, m, s).unwrap()
+    try_from_hms(h, m, s).unwrap()
 }
 
 /// Optionally creates a new `std::time::Duration` from the specified number of
@@ -43,11 +43,11 @@ pub fn from_hms(h: u32, m: u32, s: u32) -> Duration {
 ///
 /// Returns `None` if minutes or seconds is invalid.
 #[inline]
-pub fn from_hms_milli_opt(h: u32, m: u32, s: u32, milli: u32) -> Option<Duration> {
+pub fn try_from_hms_milli(h: u32, m: u32, s: u32, milli: u32) -> Option<Duration> {
     if VALID_SECS.contains(&s) && VALID_SECS.contains(&m) && (0..1000).contains(&milli) {
         Some(Duration::new(
             (h * 3600 + m * 60 + s) as u64,
-            milli * 1000_000,
+            milli * 1_000_000,
         ))
     } else {
         None
@@ -72,7 +72,7 @@ pub fn from_hms_milli_opt(h: u32, m: u32, s: u32, milli: u32) -> Option<Duration
 /// ```
 #[inline]
 pub fn from_hms_milli(h: u32, m: u32, s: u32, milli: u32) -> Duration {
-    from_hms_milli_opt(h, m, s, milli).unwrap()
+    try_from_hms_milli(h, m, s, milli).unwrap()
 }
 
 /// Optionally creates a new `std::time::Duration` from the specified number of
@@ -80,8 +80,8 @@ pub fn from_hms_milli(h: u32, m: u32, s: u32, milli: u32) -> Duration {
 ///
 /// Returns `None` if minutes or seconds is invalid.
 #[inline]
-pub fn from_hms_micro_opt(h: u32, m: u32, s: u32, micro: u32) -> Option<Duration> {
-    if VALID_SECS.contains(&s) && VALID_SECS.contains(&m) && (0..1000_000).contains(&micro) {
+pub fn try_from_hms_micro(h: u32, m: u32, s: u32, micro: u32) -> Option<Duration> {
+    if VALID_SECS.contains(&s) && VALID_SECS.contains(&m) && (0..1_000_000).contains(&micro) {
         Some(Duration::new((h * 3600 + m * 60 + s) as u64, micro * 1000))
     } else {
         None
@@ -106,7 +106,7 @@ pub fn from_hms_micro_opt(h: u32, m: u32, s: u32, micro: u32) -> Option<Duration
 /// ```
 #[inline]
 pub fn from_hms_micro(h: u32, m: u32, s: u32, micro: u32) -> Duration {
-    from_hms_micro_opt(h, m, s, micro).unwrap()
+    try_from_hms_micro(h, m, s, micro).unwrap()
 }
 
 /// Optionally creates a new `std::time::Duration` from the specified number of
@@ -114,8 +114,8 @@ pub fn from_hms_micro(h: u32, m: u32, s: u32, micro: u32) -> Duration {
 ///
 /// Returns `None` if minutes or seconds is invalid.
 #[inline]
-pub fn from_hms_nano_opt(h: u32, m: u32, s: u32, nano: u32) -> Option<Duration> {
-    if VALID_SECS.contains(&s) && VALID_SECS.contains(&m) && (0..1000_000_000).contains(&nano) {
+pub fn try_from_hms_nano(h: u32, m: u32, s: u32, nano: u32) -> Option<Duration> {
+    if VALID_SECS.contains(&s) && VALID_SECS.contains(&m) && (0..1_000_000_000).contains(&nano) {
         Some(Duration::new((h * 3600 + m * 60 + s) as u64, nano))
     } else {
         None
@@ -140,7 +140,7 @@ pub fn from_hms_nano_opt(h: u32, m: u32, s: u32, nano: u32) -> Option<Duration> 
 /// ```
 #[inline]
 pub fn from_hms_nano(h: u32, m: u32, s: u32, nano: u32) -> Duration {
-    from_hms_nano_opt(h, m, s, nano).unwrap()
+    try_from_hms_nano(h, m, s, nano).unwrap()
 }
 
 /// Converts given value to a `String` according to ISO 8601 standard with day
@@ -234,27 +234,27 @@ mod tests {
 
     #[test]
     fn from_hms_opt_s() {
-        assert_eq!(from_hms_opt(2, 30, 60), None)
+        assert_eq!(try_from_hms(2, 30, 60), None)
     }
 
     #[test]
     fn from_hms_opt_m() {
-        assert_eq!(from_hms_opt(2, 60, 0), None)
+        assert_eq!(try_from_hms(2, 60, 0), None)
     }
 
     #[test]
     fn from_hms_milli_opt_milli() {
-        assert_eq!(from_hms_milli_opt(2, 30, 0, 1500), None)
+        assert_eq!(try_from_hms_milli(2, 30, 0, 1500), None)
     }
 
     #[test]
     fn from_hms_micro_opt_micro() {
-        assert_eq!(from_hms_micro_opt(2, 30, 0, 1500_000), None)
+        assert_eq!(try_from_hms_micro(2, 30, 0, 1_500_000), None)
     }
 
     #[test]
     fn from_hms_nano_opt_nano() {
-        assert_eq!(from_hms_nano_opt(2, 30, 0, 1500_000_000), None)
+        assert_eq!(try_from_hms_nano(2, 30, 0, 1_500_000_000), None)
     }
 
     #[test]
