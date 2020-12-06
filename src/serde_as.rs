@@ -7,9 +7,9 @@ use serde_with::{DeserializeAs, SerializeAs};
 
 /// `serde_as` notation from `serde_with` crate for [`std::time::Duration`]
 /// and [`chrono::Duration`] with optional `chrono` feature
-pub struct DurationWrapper;
+pub struct Iso8601;
 
-impl SerializeAs<std::time::Duration> for DurationWrapper {
+impl SerializeAs<std::time::Duration> for Iso8601 {
     fn serialize_as<S>(duration: &std::time::Duration, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -18,7 +18,7 @@ impl SerializeAs<std::time::Duration> for DurationWrapper {
     }
 }
 
-impl<'de> DeserializeAs<'de, std::time::Duration> for DurationWrapper {
+impl<'de> DeserializeAs<'de, std::time::Duration> for Iso8601 {
     fn deserialize_as<D>(deserializer: D) -> Result<std::time::Duration, D::Error>
     where
         D: Deserializer<'de>,
@@ -31,7 +31,7 @@ impl<'de> DeserializeAs<'de, std::time::Duration> for DurationWrapper {
 }
 
 #[cfg(feature = "chrono")]
-impl SerializeAs<chrono::Duration> for DurationWrapper {
+impl SerializeAs<chrono::Duration> for Iso8601 {
     fn serialize_as<S>(duration: &chrono::Duration, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -47,7 +47,7 @@ impl SerializeAs<chrono::Duration> for DurationWrapper {
 }
 
 #[cfg(feature = "chrono")]
-impl<'de> DeserializeAs<'de, chrono::Duration> for DurationWrapper {
+impl<'de> DeserializeAs<'de, chrono::Duration> for Iso8601 {
     fn deserialize_as<D>(deserializer: D) -> Result<chrono::Duration, D::Error>
     where
         D: Deserializer<'de>,
